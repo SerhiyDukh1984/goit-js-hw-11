@@ -17,16 +17,12 @@ loadMoreBtn.classList.add('is-hidden');
 searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.addEventListener('click', onLoadMore);
 
-function onSearch(e) {
+async function onSearch(e) {
   e.preventDefault();
   clearHitsContainer();
   loadMoreBtn.classList.add('is-hidden');
 
   newApiServise.query = inputEl.value;
-
-  // const totalPages = Math.ceil(newApiServise.totalHits / 40);
-  // console.log('🚀 ~ totalPages', totalPages);
-  // const totalHits = newApiServise.totalHits;
 
   if (newApiServise.query.trim() === '') {
     Notiflix.Notify.failure(
@@ -35,13 +31,16 @@ function onSearch(e) {
     return;
   }
   newApiServise.resetPage();
-  newApiServise.fetchArticles().then(hits => {
+  await newApiServise.fetchArticles().then(hits => {
     if (hits.length === 0) {
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
       return;
     }
+
+    console.log(newApiServise.totalP);
+    console.log(newApiServise.totalHits);
 
     clearHitsContainer();
     appendHitsCard(hits);
@@ -50,9 +49,10 @@ function onSearch(e) {
     searchForm.reset();
   });
 }
+// console.log(newApiServise.pages);
 
-function onLoadMore() {
-  newApiServise.fetchArticles().then(appendHitsCard);
+async function onLoadMore() {
+  await newApiServise.fetchArticles().then(appendHitsCard);
 }
 
 function appendHitsCard(hits) {

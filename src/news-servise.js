@@ -6,7 +6,9 @@ export default class NewApiServise {
     this.searchQuery = '';
     this.page = 1;
     this.total = 0;
-    this.pages = this.totalhits / 40;
+    this.totalPages = 0;
+    this.totalHits = 0;
+    // this.pages = this.totalhits / 40;
   }
 
   fetchArticles() {
@@ -14,6 +16,14 @@ export default class NewApiServise {
 
     return fetch(URL)
       .then(response => response.json())
+      .then(data => {
+        this.totalPages = Math.ceil(data.totalHits / 40);
+
+        this.totalHits = data.totalHits;
+
+        return data;
+      })
+
       .then(({ hits }) => {
         this.page += 1;
         this.total += hits.length;
@@ -34,11 +44,12 @@ export default class NewApiServise {
     this.page = 1;
     this.total = 0;
   }
+
+  get totalP() {
+    return this.totalPages;
+  }
+
+  set totalP(value) {
+    this.totalPages = value;
+  }
 }
-
-// .then(data => {
-//         this.totalPages = Math.ceil(data.totalHits / 40);
-//         this.totalHits = data.totalHits;
-
-//         return data.hits;
-//       })
