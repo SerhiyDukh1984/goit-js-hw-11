@@ -23,7 +23,6 @@ export default class NewApiServise {
 
         return data;
       })
-
       .then(({ hits }) => {
         this.page += 1;
         this.total += hits.length;

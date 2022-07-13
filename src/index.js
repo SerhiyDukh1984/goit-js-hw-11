@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -30,8 +30,12 @@ async function onSearch(e) {
     );
     return;
   }
+
   newApiServise.resetPage();
-  await newApiServise.fetchArticles().then(hits => {
+
+  try {
+    const hits = await newApiServise.fetchArticles();
+
     if (hits.length === 0) {
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
@@ -39,20 +43,34 @@ async function onSearch(e) {
       return;
     }
 
-    console.log(newApiServise.totalP);
-    console.log(newApiServise.totalHits);
+    console.log('tp', newApiServise.totalP);
+    console.log(newApiServise.page - 1);
 
     clearHitsContainer();
     appendHitsCard(hits);
     loadMoreBtn.classList.remove('is-hidden');
 
     searchForm.reset();
-  });
+  } catch (Error) {
+    console.log(Error);
+  }
 }
-// console.log(newApiServise.pages);
 
 async function onLoadMore() {
-  await newApiServise.fetchArticles().then(appendHitsCard);
+  try {
+    const data = await newApiServise.fetchArticles();
+
+    if (newApiServise.totalP === newApiServise.page - 1) {
+      loadMoreBtn.classList.add('is-hidden');
+      Notiflix.Notify.info(
+        'We are sorry, but you have reached the end of search results.'
+      );
+    }
+
+    appendHitsCard(data);
+  } catch (Error) {
+    console.log(Error);
+  }
 }
 
 function appendHitsCard(hits) {
