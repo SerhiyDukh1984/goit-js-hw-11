@@ -28,7 +28,7 @@ function onSearch(e) {
   // console.log('🚀 ~ totalPages', totalPages);
   // const totalHits = newApiServise.totalHits;
 
-  if (newApiServise.query === '') {
+  if (newApiServise.query.trim() === '') {
     Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
