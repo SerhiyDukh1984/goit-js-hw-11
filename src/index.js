@@ -58,7 +58,7 @@ async function onSearch(e) {
 
 async function onLoadMore() {
   try {
-    const data = await newApiServise.fetchArticles();
+    const hits = await newApiServise.fetchArticles();
 
     if (newApiServise.totalP === newApiServise.page - 1) {
       loadMoreBtn.classList.add('is-hidden');
@@ -67,7 +67,7 @@ async function onLoadMore() {
       );
     }
 
-    appendHitsCard(data);
+    appendHitsCard(hits);
   } catch (Error) {
     console.log(Error);
   }
